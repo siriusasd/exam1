@@ -13,26 +13,30 @@ DigitalIn Select(D5);
  
 uLCD_4DGL uLCD(D1, D0, D2);
 
-float ADCdata[200];
-
-int sample = 200;
-
 void genWave(float freq)
 {
-    int counter=0, c=0,a=0,en=0;
+    if(freq==0.125)
+        led1=1;
+    else if(freq==0.25)
+        led2=1;
+    else if(freq==0.5)
+        led3=1;
+
+    float r,x;
+    x=(float)1.25/freq;
+    r=240-160*freq;
     while(1)
     {   
-        for (float i=0.0f; i < 1.0f; i += )
+        for (float i=0.0f; i < 100.0f; i += x)
         { 
-            aout = (float)i/110.0f;
-            counter++;      //count how many loops of for loop
-            if(counter%5==0&&c<sample&&a==50)
-            {
-                ADCdata[c++]=(double)i*3.3/100;
-                //printf("%f\r\n", (double)i*3.3/10);
-            }
-            ThisThread::sleep_for(200ms/sample);
-            //wait_us(time);
+            aout=(float)i/110.0;
+            ThisThread::sleep_for(1ms);
+        }
+        ThisThread::sleep_for(r);
+        for (float i=100.0f; i > 0.0f; i -= x)
+        { 
+            aout=(float)i/110.0;
+            ThisThread::sleep_for(1ms);
         }
     }
 }
@@ -125,15 +129,15 @@ int main()
     {
         case 1:
             uLCD.printf("\n\n1/8 is selected!!\n");
-            genWave(1/8);
+            genWave(0.125);
             break;
         case 2:
             uLCD.printf("\n\n1/4 is selected!!\n");
-            genWave(1/4);
+            genWave(0.25);
             break;
         case 3:
             uLCD.printf("\n\n1/2 is selected!!\n");
-            genWave(1/2);
+            genWave(0.5);
             break;
         case 4:
             uLCD.printf("\n\n1 is selected!\n");
